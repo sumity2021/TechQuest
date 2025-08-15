@@ -1,36 +1,38 @@
-from sqlalchemy import Column , Integer , String , DateTime, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
+import os
 
-engine =create_engine('sqlite:///database.db',echo=True)
+# Use absolute path for SQLite database
+db_path = os.path.join(os.getcwd(), 'database.db')
+engine = create_engine(f'sqlite:///{db_path}', echo=True)
 Base = declarative_base()
 
 class Challenge(Base):
-    __tablename__='challenge'
-    id=Column(Integer,primary_key=True)
-    difficulty=Column(String,nullable=False)
-    subject=Column(String,nullable=False)
-    date_created= Column(DateTime,default=datetime.now)
-    created_by=Column(String, nullable=False)
-    title=Column(String,nullable=False)
-    options=Column(String,nullable=False)
-    correct_answer_id=Column(Integer, nullable=False)
-    explanation=Column(String,nullable=False)
-
+    __tablename__ = 'challenge'
+    id = Column(Integer, primary_key=True)
+    difficulty = Column(String, nullable=False)
+    subject = Column(String, nullable=False)
+    date_created = Column(DateTime, default=datetime.now)
+    created_by = Column(String, nullable=False)
+    title = Column(String, nullable=False)
+    options = Column(String, nullable=False)
+    correct_answer_id = Column(Integer, nullable=False)
+    explanation = Column(String, nullable=False)
 
 class ChallengeQuota(Base):
-    __tablename__='challenge_quotas'
+    __tablename__ = 'challenge_quotas'
 
-    id=Column(Integer ,primary_key=True)
-    user_id=Column(String,nullable=False,unique=True)
-    quota_remaining=Column(Integer,nullable=False, default=5)
-    last_reset_date=Column(DateTime,default=datetime.now)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String, nullable=False, unique=True)
+    quota_remaining = Column(Integer, nullable=False, default=5)
+    last_reset_date = Column(DateTime, default=datetime.now)
 
-
+# Create tables
 Base.metadata.create_all(engine)
 
-SessionLocal=sessionmaker(autocommit=False,autoflush=False , bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
     db = SessionLocal()
@@ -38,6 +40,3 @@ def get_db():
         yield db
     finally:
         db.close()
-    
-
-    

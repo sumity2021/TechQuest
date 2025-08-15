@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,HTTPException,Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from ..ai_generator import generate_challenge_with_ai
@@ -15,13 +15,13 @@ from ..databases.models import get_db
 import json
 from datetime import datetime
 
-router=APIRouter()
+router = APIRouter()
 
 class ChallengeRequest(BaseModel):
-    difficulty:str
-    subject:str
+    difficulty: str
+    subject: str
     class Config:
-        json_schema_extra={"example":{"difficulty" : "easy","subject":"dsa"}}
+        json_schema_extra = {"example": {"difficulty": "easy", "subject": "dsa"}}
 
 @router.post("/generate-challenge")
 async def generate_challenge(
@@ -75,25 +75,39 @@ async def generate_challenge(
         traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(e))
 
-
 @router.get("/my-history")
-async def my_history(request: Request, db:Session = Depends(get_db)):
-    user_details=authenticate_and_get_user_details(request)
-    user_id=user_details.get("user_id")
-    challenges=get_user_challenges(db, user_id)
-    return {"challenges" : challenges}
+async def my_history(request: Request, db: Session = Depends(get_db)):
+    try:
+        user_details = authenticate_and_get_user_details(request)
+        user_id = user_details.get("user_id")
+        challenges = get_user_challenges(db, user_id)
+        return {"challenges": challenges}
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error fetching history: {str(e)}")
 
 @router.get("/quota")
-async def get_quota(request:Request , db: Session = Depends(get_db)):
-    user_details=authenticate_and_get_user_details(request)
-    user_id=user_details.get("user_id")
+async def get_quota(request: Request, db: Session = Depends(get_db)):
+    try:
+        user_details = authenticate_and_get_user_details(request)
+        user_id = user_details.get("user_id")
 
-    quota=get_challenge_quota(db,user_id)
-    if not quota :
+        quota = get_challenge_quota(db, user_id)
+        if not quota:
+            # Create quota if it doesn't exist
+            quota = create_challenge_quota(db, user_id)
+        
+        quota = reset_quota_if_needed(db, quota)
         return {
-            "user_id" : user_id,
-            "quota_remaining":0,
-            "last_reset_date":datetime.now()
+            "user_id": user_id,
+            "quota_remaining": quota.quota_remaining,
+            "last_reset_date": quota.last_reset_date.isoformat()
         }
-    quota=reset_quota_if_needed(db,quota)
-    return quota
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error fetching quota: {str(e)}")
+
+# Add a test endpoint that doesn't require authentication
+@router.get("/test")
+async def test_endpoint():
+    return {"message": "API routes are working!", "timestamp": datetime.now().isoformat()}
