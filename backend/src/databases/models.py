@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 
+# Use absolute path for SQLite database
 db_path = os.path.join(os.getcwd(), 'database.db')
 engine = create_engine(f'sqlite:///{db_path}', echo=True)
 Base = declarative_base()
@@ -28,6 +29,7 @@ class ChallengeQuota(Base):
     quota_remaining = Column(Integer, nullable=False, default=5)
     last_reset_date = Column(DateTime, default=datetime.now)
 
+# Create tables
 Base.metadata.create_all(engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

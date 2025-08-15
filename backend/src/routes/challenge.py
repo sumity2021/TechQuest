@@ -107,6 +107,7 @@ async def get_quota(request: Request, db: Session = Depends(get_db)):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error fetching quota: {str(e)}")
 
+# Add a test endpoint that doesn't require authentication
 @router.get("/test")
 async def test_endpoint():
     return {"message": "API routes are working!", "timestamp": datetime.now().isoformat()}
