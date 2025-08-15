@@ -36,12 +36,12 @@ def generate_challenge_with_ai(difficulty: str, subject: str) -> Dict[str, Any]:
 
     Output format:
     Return ONLY valid JSON in the following structure:
-    {
+    {{
         "title": "The question title",
         "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
         "correct_answer_id": 0,
         "explanation": "Detailed explanation of why the correct answer is correct and why others are wrong"
-    }
+    }}
     Do NOT include any text outside of the JSON.
     """
 
