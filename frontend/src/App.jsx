@@ -20,10 +20,14 @@ function App() {
       return;
     }
 
-    fetch(`${apiUrl}/api/quota`)
+    // Test with the public health endpoint instead of the protected quota endpoint
+    fetch(`${apiUrl}/health`)
       .then((res) => {
-        if (!res.ok) throw new Error("Backend responded with error");
-        setBackendStatus("✅ Backend reachable");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setBackendStatus(`✅ Backend reachable: ${data.message}`);
       })
       .catch((err) => {
         setBackendStatus(
@@ -56,5 +60,3 @@ function App() {
     </ClerkProviderWithRoutes>
   );
 }
-
-export default App;
