@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import ClerkProviderWithRoutes from "./auth/ClerkProviderWithRoutes.jsx";
 import { Routes, Route } from "react-router-dom";
 import { Layout } from "./layout/Layout.jsx";
@@ -10,17 +9,6 @@ import "./App.css";
 function App() {
   return (
     <ClerkProviderWithRoutes>
-      <div
-        style={{
-          background: "#222",
-          color: "#fff",
-          padding: "8px",
-          fontSize: "14px",
-          fontFamily: "monospace",
-        }}
-      >
-        {backendStatus}
-      </div>
       <Routes>
         <Route path="/sign-in/*" element={<AuthenticationPage />} />
         <Route path="/sign-up" element={<AuthenticationPage />} />
@@ -32,3 +20,5 @@ function App() {
     </ClerkProviderWithRoutes>
   );
 }
+
+export default App;
