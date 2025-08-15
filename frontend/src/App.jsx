@@ -13,6 +13,12 @@ function App() {
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
+    console.log("Environment variables:", {
+      VITE_API_URL: import.meta.env.VITE_API_URL,
+      NODE_ENV: import.meta.env.NODE_ENV,
+      MODE: import.meta.env.MODE,
+    });
+
     if (!apiUrl) {
       setBackendStatus(
         "❌ ERROR: VITE_API_URL is missing! Check your environment variables in Vercel."
@@ -20,16 +26,27 @@ function App() {
       return;
     }
 
+    setBackendStatus(`🔄 Connecting to: ${apiUrl}/health`);
+
     // Test with the public health endpoint instead of the protected quota endpoint
-    fetch(`${apiUrl}/health`)
+    fetch(`${apiUrl}/health`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => {
+        console.log("Response received:", res.status, res.statusText);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
+        console.log("Backend response:", data);
         setBackendStatus(`✅ Backend reachable: ${data.message}`);
       })
       .catch((err) => {
+        console.error("Fetch error:", err);
         setBackendStatus(
           `❌ Backend unreachable at ${apiUrl}. Error: ${err.message}`
         );
