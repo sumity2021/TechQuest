@@ -6,7 +6,7 @@ app = FastAPI()
 # Correct CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # You can restrict this to your React frontend URL
+    allow_origins=["https://tech-quest-inky.vercel.app","http://localhost:3000","http://localhost:5173"],       # You can restrict this to your React frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
