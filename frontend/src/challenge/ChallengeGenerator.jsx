@@ -106,7 +106,7 @@ export function ChallengeGenerator() {
         </div>
       )}
 
-      {challenge && <MCQChallenge challenge={challenge} />}
+      {challenge && <MCQChallenge challenge={challenge} key={challenge.id} />}
     </div>
   );
 }
