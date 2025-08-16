@@ -4,9 +4,13 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 
-# Use absolute path for SQLite database
-db_path = os.path.join(os.getcwd(), 'database.db')
-engine = create_engine(f'sqlite:///{db_path}', echo=True)
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL, echo=True, pool_pre_ping=True)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
 class Challenge(Base):

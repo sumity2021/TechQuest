@@ -2,4 +2,3 @@
 .venv
 uv.lock
 __pycache__/
-*.db
