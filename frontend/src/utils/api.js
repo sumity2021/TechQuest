@@ -11,7 +11,6 @@ export const useApi = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(token);
 
     const apiBaseUrl = import.meta.env.VITE_API_URL;
     const response = await fetch(`${apiBaseUrl}/api/${endpoint}`, {
