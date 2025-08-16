@@ -5,16 +5,14 @@ export const useApi = () => {
 
   const makeRequest = async (endpoint, options = {}) => {
     const token = await getToken();
-
     const defaultOptions = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     };
-
-    // Use relative path since Vercel routes /api/* to backend
-    const response = await fetch(`/api/${endpoint}`, {
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
+    const response = await fetch(`${apiBaseUrl}/api/${endpoint}`, {
       ...defaultOptions,
       ...options,
     });
