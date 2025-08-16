@@ -11,11 +11,14 @@ export const useApi = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const apiBaseUrl = import.meta.env.VITE_API_URL;
-    const response = await fetch(`${apiBaseUrl}/api/${endpoint}`, {
-      ...defaultOptions,
-      ...options,
-    });
+
+    const response = await fetch(
+      `https://techquest-lqy8.onrender.com/api/${endpoint}`,
+      {
+        ...defaultOptions,
+        ...options,
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
