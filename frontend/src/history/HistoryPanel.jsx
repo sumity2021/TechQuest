@@ -2,7 +2,6 @@ import "react";
 import { useState, useEffect } from "react";
 import { MCQChallenge } from "../challenge/MCQChallenge.jsx";
 import { useApi } from "../utils/api.js";
-import { useLocation } from "react-router-dom";
 
 export function HistoryPanel() {
   const { makeRequest } = useApi();
@@ -10,11 +9,9 @@ export function HistoryPanel() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const location = useLocation();
-
   useEffect(() => {
     fetchHistory();
-  }, [location.pathname]);
+  }, []);
 
   const fetchHistory = async () => {
     setIsLoading(true);
