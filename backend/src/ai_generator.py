@@ -31,16 +31,16 @@ def generate_challenge_with_ai(difficulty: str, subject: str) -> Dict[str, Any]:
     - Hard: advanced algorithms, optimization, or design patterns
     3. All 4 options must be realistic and plausible — only ONE correct.
     4. The correct answer must be at the given index in "correct_answer_id" (0-based).
-    5. The explanation must be detailed and justify why the correct answer is right and others are wrong.
-    6. Generate a completely NEW question every time — do not repeat previous ones.
+    5. The explanation must be detailed and formatted in valid HTML.
+    6. The question title must include the title in an HTML heading tag (e.g., <h3>).
 
     Output format:
     Return ONLY valid JSON in the following structure:
     {{
-        "title": "The question title",
+        "title": "<h3>Title of the question</h3><p>Full question description here</p>",
         "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
         "correct_answer_id": 0,
-        "explanation": "Detailed explanation of why the correct answer is correct and why others are wrong"
+        "explanation": "<p>Detailed explanation of why the correct answer is correct and why others are wrong with paragrapgh in p tag </p>"
     }}
     Do NOT include any text outside of the JSON.
     """
@@ -53,7 +53,6 @@ def generate_challenge_with_ai(difficulty: str, subject: str) -> Dict[str, Any]:
 
         content = response.text.strip()
 
-        # Clean markdown code fences if present
         if content.startswith("```json"):
             content = content[7:-3].strip()
 
@@ -69,7 +68,7 @@ def generate_challenge_with_ai(difficulty: str, subject: str) -> Dict[str, Any]:
     except Exception as e:
         print(f"Error generating challenge: {e}")
         return {
-            "title": "Basic Python List Operation",
+            "title": "<h3>Basic Python List Operation</h3><p>What is the correct way to add an element to a list in Python?</p>",
             "options": [
                 "my_list.append(5)",
                 "my_list.add(5)",
@@ -77,5 +76,5 @@ def generate_challenge_with_ai(difficulty: str, subject: str) -> Dict[str, Any]:
                 "my_list.insert(5)",
             ],
             "correct_answer_id": 0,
-            "explanation": "In Python, append() adds an element to the end of a list."
+            "explanation": "<p>In Python, <code>append()</code> adds an element to the end of a list. Other methods like <code>add()</code>, <code>push()</code>, and <code>insert()</code> are either incorrect or do not exist for lists.</p>"
         }

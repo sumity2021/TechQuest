@@ -49,3 +49,14 @@ def create_challenge(
 
 def get_user_challenges(db : Session , user_id : str):
     return db.query(models.Challenge).filter(models.Challenge.created_by==user_id).all()
+
+def delete_challenge_by_id(db: Session, challenge_id: int, user_id: str):
+    challenge = db.query(models.Challenge).filter(
+        models.Challenge.id == challenge_id,
+        models.Challenge.created_by == user_id
+    ).first()
+    if challenge:
+        db.delete(challenge)
+        db.commit()
+        return True
+    return False

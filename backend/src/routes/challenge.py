@@ -7,7 +7,8 @@ from ..databases.db import(
     create_challenge,
     create_challenge_quota,
     reset_quota_if_needed,
-    get_user_challenges
+    get_user_challenges,
+    delete_challenge_by_id
 )
 import traceback
 from ..utils import authenticate_and_get_user_details
@@ -109,3 +110,19 @@ async def get_quota(request: Request, db: Session = Depends(get_db)):
 @router.get("/test")
 async def test_endpoint():
     return {"message": "API routes are working!", "timestamp": datetime.now().isoformat()}
+
+@router.delete("/delete-challenge/{challenge_id}")
+async def delete_challenge(challenge_id: int, request: Request, db: Session = Depends(get_db)):
+    try:
+        user_details = authenticate_and_get_user_details(request)
+        user_id = user_details.get("user_id")
+
+        # Use the new function to delete the challenge
+        success = delete_challenge_by_id(db, challenge_id, user_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Challenge not found or unauthorized")
+
+        return {"message": "Challenge deleted successfully", "challenge_id": challenge_id}
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error deleting challenge: {str(e)}")

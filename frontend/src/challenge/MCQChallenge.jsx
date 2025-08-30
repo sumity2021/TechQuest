@@ -1,11 +1,16 @@
 import "react";
 import { useState } from "react";
+import { useApi } from "../utils/api.js";
 
-export function MCQChallenge({ challenge, showExplanation = false }) {
+export function MCQChallenge({
+  challenge,
+  showExplanation = false,
+  showDeleteButton = false,
+}) {
+  const { makeRequest } = useApi();
   const [selectedOption, setSelectedOption] = useState(null);
   const [shouldShowExplanation, setShouldShowExplanation] =
     useState(showExplanation);
-
   const subjectMap = {
     dsa: "Data Structures & Algorithms",
     cpp: "C++",
@@ -24,14 +29,14 @@ export function MCQChallenge({ challenge, showExplanation = false }) {
   };
 
   const subjectColor = {
-    dsa: "#007bff", // blue
-    cpp: "#6f42c1", // purple
-    sql: "#17a2b8", // teal
-    oops: "#fd7e14", // orange
-    java: "#f44336", // red
-    os: "#20c997", // green-teal
-    dbms: "#6610f2", // indigo
-    cn: "#c626bcff", // yellow
+    dsa: "#007bff",
+    cpp: "#6f42c1",
+    sql: "#17a2b8",
+    oops: "#fd7e14",
+    java: "#f44336",
+    os: "#20c997",
+    dbms: "#6610f2",
+    cn: "#c626bcff",
   };
 
   const difficultyColor = {
@@ -64,20 +69,40 @@ export function MCQChallenge({ challenge, showExplanation = false }) {
     return "option";
   };
 
+  const handleDelete = async () => {
+    try {
+      await makeRequest(`delete-challenge/${challenge.id}`, {
+        method: "DELETE",
+      });
+      window.location.reload();
+    } catch (error) {
+      alert(`Failed to delete challenge: ${error.message}`);
+    }
+  };
+
   return (
     <div className="challenge-display">
-      <p>
-        <strong>Difficulty</strong>: {""}
-        <span style={{ color: difficultyColor[challenge.difficulty] }}>
-          {difficultyMap[challenge.difficulty] || challenge.difficulty}
-        </span>
-      </p>
-      <p>
-        <strong>Subject</strong>: {""}
-        <span style={{ color: subjectColor[challenge.subject] }}>
-          {subjectMap[challenge.subject] || challenge.subject}
-        </span>
-      </p>
+      <div className="challenge-control">
+        <div>
+          <p>
+            <strong>Difficulty</strong>: {""}
+            <span style={{ color: difficultyColor[challenge.difficulty] }}>
+              {difficultyMap[challenge.difficulty] || challenge.difficulty}
+            </span>
+          </p>
+          <p>
+            <strong>Subject</strong>: {""}
+            <span style={{ color: subjectColor[challenge.subject] }}>
+              {subjectMap[challenge.subject] || challenge.subject}
+            </span>
+          </p>
+        </div>
+        {showDeleteButton && (
+          <button className="delbtn" onClick={handleDelete}>
+            Delete
+          </button>
+        )}
+      </div>
       <p className="challenge-title">{challenge.title}</p>
       <div className="options">
         {options.map((option, index) => (
