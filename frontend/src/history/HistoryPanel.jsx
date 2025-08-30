@@ -66,10 +66,8 @@ export function HistoryPanel() {
       <h2>Challenge History</h2>
       {history.length === 0 ? (
         <div className="no-challenges">
-          <p>No challenges attempted yet</p>
-          <p className="subtext">
-            Generate your first challenge to see it here
-          </p>
+          <h3>No challenges attempted yet</h3>
+          <p>Generate your first challenge to see it here</p>
         </div>
       ) : (
         <div>

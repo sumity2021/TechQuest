@@ -103,7 +103,10 @@ export function MCQChallenge({
           </button>
         )}
       </div>
-      <p className="challenge-title">{challenge.title}</p>
+      <div
+        className="challenge-title"
+        dangerouslySetInnerHTML={{ __html: challenge.title }}
+      ></div>
       <div className="options">
         {options.map((option, index) => (
           <div
@@ -118,7 +121,9 @@ export function MCQChallenge({
       {shouldShowExplanation && selectedOption !== null && (
         <div className="explanation">
           <h4>Explanation</h4>
-          <p>{challenge.explanation}</p>
+          <div
+            dangerouslySetInnerHTML={{ __html: challenge.explanation }}
+          ></div>
         </div>
       )}
     </div>
