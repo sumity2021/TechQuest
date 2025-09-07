@@ -27,6 +27,16 @@ export function HistoryPanel() {
       setIsLoading(false);
     }
   };
+  
+  const handleDelete = async (id) => {
+    try {
+      await makeRequest(`delete-challenge/${id}`, { method: "DELETE" });
+
+      setHistory((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error("Failed to delete challenge", err);
+    }
+  };
 
   const groupChallengesBySubject = (challenges) => {
     return challenges.reduce((acc, challenge) => {
@@ -80,6 +90,7 @@ export function HistoryPanel() {
                     key={challenge.id}
                     showExplanation
                     showDeleteButton={true}
+                    onDelete={()=>{handleDelete(challenge.id)}}
                   />
                 ))}
               </div>

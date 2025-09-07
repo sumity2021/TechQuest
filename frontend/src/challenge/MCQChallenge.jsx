@@ -6,6 +6,7 @@ export function MCQChallenge({
   challenge,
   showExplanation = false,
   showDeleteButton = false,
+  onDelete,
 }) {
   const { makeRequest } = useApi();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -69,17 +70,6 @@ export function MCQChallenge({
     return "option";
   };
 
-  const handleDelete = async () => {
-    try {
-      await makeRequest(`delete-challenge/${challenge.id}`, {
-        method: "DELETE",
-      });
-      window.location.reload();
-    } catch (error) {
-      alert(`Failed to delete challenge: ${error.message}`);
-    }
-  };
-
   return (
     <div className="challenge-display">
       <div className="challenge-control">
@@ -98,7 +88,7 @@ export function MCQChallenge({
           </p>
         </div>
         {showDeleteButton && (
-          <button className="delbtn" onClick={handleDelete}>
+          <button className="delbtn" onClick={onDelete}>
             Delete
           </button>
         )}
